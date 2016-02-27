@@ -1,6 +1,6 @@
 {
   "name": "unpi",
-  "version": "0.0.1",
+  "version": "0.8.0",
   "description": "Unified Network Processor Interface",
   "main": "index.js",
   "dependencies": {
