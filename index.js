@@ -154,6 +154,11 @@ Unpi.prototype.send = function (type, subsys, cmdId, payload) {
     return packet;
 };
 
+Unpi.prototype.receive = function (buf) {
+    this.parser.write(buf);
+    return this;
+};
+
 /*************************************************************************************************/
 /*** Parsing Clauses                                                                           ***/
 /*************************************************************************************************/
