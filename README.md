@@ -8,6 +8,15 @@ unpi
 3. [Usage](#Usage)  
 4. [APIs](#APIs)  
 
+    * new Unpi()  
+    * receive()  
+    * send()  
+
+5. [Events](#Events)  
+
+    * 'data'  
+    * 'error'  
+
 <a name="Intro"></a>
 ## 1. Intro
 
