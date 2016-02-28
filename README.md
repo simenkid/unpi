@@ -18,7 +18,7 @@ The *unpi* is the packet builder and parser for Texas Instruments [_Unified Netw
 
 The UNPI packet consists of _sof_, _length_, _cmd0_, _cmd1_, _payload_, and _fcs_ fields. The description of each field can be found in [_Unified Network Processor Interface_](http://processors.wiki.ti.com/index.php/Unified_Network_Processor_Interface).  
 
-It is noted that **UNPI** defines the _length_ field with 2 bytes wide, but some SoCs use [NPI](http://processors.wiki.ti.com/index.php/NPI) in their real transmission (physical layer), the `length` field just occupies a single byte. (The `length` field will be normalized to 2 bytes in the transportation layer of NPI stack.)  
+It is noted that **UNPI** defines the _length_ field with 2 bytes wide, but some SoCs use [NPI](http://processors.wiki.ti.com/index.php/NPI) in their real transmission (physical layer), the _length_ field just occupies a single byte. (The _length_ field will be normalized to 2 bytes in the transportation layer of NPI stack.)  
 
 <a name="Installation"></a>
 ## 2. Installation
@@ -29,20 +29,26 @@ It is noted that **UNPI** defines the _length_ field with 2 bytes wide, but some
 ## 3. Usage
 
 To use unpi, just new an instance from the Unpi class. The Unpi constructor accepts an optional parameter `config` object. If `config` is not given, a default value of `{ lenBytes: 2 }` will be used internally. The property `lenBytes` indicates the width of the _length_ field.  
-Since the transmission should be accomplished upon an UART or a SPI physical interface, you can pass the physical transceiver to your unpi by attach it to `config.phy` property, i.e., `{ phy: sp }` where `sp` is a serialport instance. The `phy` instance should be also an instance of node.js _Stream_ class.
-Let me show you some examples:
+  
+Since the transmission should be accomplished upon an UART or a SPI physical interface, you can pass the physical transceiver to your unpi by attach it to `config.phy` property, i.e., `{ phy: sp }` where `sp` is a serialport instance. The `phy` instance should be a _Stream_.  
+
+Here is an quick example and the parsed data format can be found in the ['data' event](#EVT_data) section.
 
 ```js
-// In this example, we don't have a physical transceiver, but it's ok
-var Unpi = require('unpi');
-var unpi = new Unpi({ lenBytes: 1 });
+var Unpi = require('unpi'),
+    SerialPort = require("serialport").SerialPort;
+
+var sp = new SerialPort("/dev/ttyUSB0", {
+        baudrate: 57600
+    }),
+    unpi = new Unpi({
+        lenBytes: 1
+        phy: sp
+    });
 
 unpi.on('data', function (data) {
-    console.log(data);
+    console.log(data);  // The parsed data receiving from the serial port
 });
-
-unpi.recevie();
-
 ```
   
 <a name="APIs"></a>
