@@ -6,27 +6,19 @@ unpi
 1. [Intro](#Intro)  
 2. [Installation](#Installation)  
 3. [Usage](#Usage)  
-4. [APIs](#APIs)  
-
-    * new Unpi()  
-    * receive()  
-    * send()  
-
-5. [Events](#Events)  
-
-    * 'data'  
-    * 'error'  
+4. [APIs](#APIs): new Unpi(), receive(), and send()   
+5. [Events](#Events): 'data' and 'error'  
 
 <a name="Intro"></a>
 ## 1. Intro
 
-The *unpi* is the packet builder and parser for Texas Instruments [_Unified Network Processor Interface (UNPI)_](http://processors.wiki.ti.com/index.php/Unified_Network_Processor_Interface) within RF4CE, BluetoothSmart, and ZigBee wireless SoCs. As stated in TI's wiki page:  
+The *unpi* is the packet builder and parser for Texas Instruments [_Unified Network Processor Interface (UNPI)_](http://processors.wiki.ti.com/index.php/Unified_Network_Processor_Interface) used in RF4CE, BluetoothSmart, and ZigBee wireless SoCs. As stated in TI's wiki page:  
 
 > TI's Unified Network Processor Interface (NPI) is used for establishing a serial data link between a TI SoC and external MCUs or PCs. This is mainly used by TI's network processor solutions.  
 
 The UNPI packet consists of _sof_, _length_, _cmd0_, _cmd1_, _payload_, and _fcs_ fields. The description of each field can be found in [_Unified Network Processor Interface_](http://processors.wiki.ti.com/index.php/Unified_Network_Processor_Interface).  
 
-It is noted that **UNPI** defines the _length_ field with 2 bytes wide, but some SoCs use [NPI](http://processors.wiki.ti.com/index.php/NPI) in their real transmission, the `length` field just occupies a single byte.  
+It is noted that **UNPI** defines the _length_ field with 2 bytes wide, but some SoCs use [NPI](http://processors.wiki.ti.com/index.php/NPI) in their real transmission (physical layer), the `length` field just occupies a single byte. (The `length` field will be normalized to 2 bytes in the transportation layer of NPI stack.)  
 
 <a name="Installation"></a>
 ## 2. Installation
