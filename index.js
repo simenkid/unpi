@@ -149,7 +149,9 @@ Unpi.prototype.send = function (type, subsys, cmdId, payload) {
 
     fcs = checksum(lenBuf, payload);
     packet = Concentrate().uint8(sof).buffer(lenBuf).uint8(cmd0).uint8(cmd1).buffer(payload).uint8(fcs).result();
-    this.concentrate.buffer(packet).flush();
+    
+    if (this.config.phy)
+        this.concentrate.buffer(packet).flush();
 
     return packet;
 };
