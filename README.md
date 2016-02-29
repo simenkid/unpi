@@ -8,6 +8,7 @@ unpi
 3. [Usage](#Usage)  
 4. [APIs](#APIs): new Unpi(), receive(), and send()   
 5. [Events](#Events): 'data' and 'error'  
+6. [Appendix](#Appendix): Command types and Subsystems  
 
 <a name="Intro"></a>
 ## 1. Intro
@@ -123,16 +124,15 @@ unpi.on('data', function (data) {
 *************************************************
 <a name="API_receive"></a>
 ### .receive(buf)
-Feeds the unpi with raw data. You can take the unpi as a generic parser if you don't have any physical transceiver.  
+Feeds the unpi with some binary raw data. You can take the unpi as a generic parser if you don't have any physical transceiver.  
 
 **Arguments:**  
 
-1. `buf` (_Buffer_): A raw packet of UNPI protocol.  
-
+1. `buf` (_Buffer_): An UNPI raw packet.  
   
 **Returns:**  
   
-* (_Object_): unpi instance itself
+* (_Object_): this (unpi instance itself)
 
 **Examples:**  
     
@@ -146,12 +146,12 @@ unpi.receive(new Buffer([
 *************************************************
 <a name="API_send"></a>
 ### .send(type, subsys, cmdId, payload)
-Send the packet out through the physical transmitter if there is a `phy` transceiver. The API will return a raw buffer of the packet, you can take it as a generic packet builder.  
+Send the binaries out through the physical transmitter if there is a `phy` transceiver. The API will return a raw buffer of the packet, you can take it as a generic packet builder.  
 
 **Arguments:**  
 
-1. `type` (_Number_ | _ String_): The command type.  
-2. `subsys` (_Number_ | _ String_): The subsystem.  
+1. `type` (_Number_ | _String_): The command type.  
+2. `subsys` (_Number_ | _String_): The subsystem.  
 3. `cmdId` (_Number_): The command id.  
 4. `payload` (_Buffer_): The data payload.  
   
@@ -210,3 +210,60 @@ unpi.on('error', function (err, parsedData) {
 });
 ```
 <br />  
+
+<a name="Appendix"></a>
+## 6. Appendix
+
+* Command Type
+
+```js
+{
+    "POLL": 0,
+    "SREQ": 1,
+    "AREQ": 2,
+    "SRSP": 3,
+    "RES01": 4,
+    "RES02": 5,
+    "RES03": 6,
+    "RES04": 7
+}
+```
+* Subsystem  
+
+```js
+{
+    "RPC_SYS_RES0": 0,
+    "RPC_SYS_SYS": 1,
+    "RPC_SYS_MAC": 2,
+    "RPC_SYS_NWK": 3,
+    "RPC_SYS_AF": 4,
+    "RPC_SYS_ZDO": 5,
+    "RPC_SYS_SAPI": 6,
+    "RPC_SYS_UTIL": 7,
+    "RPC_SYS_DBG": 8,
+    "RPC_SYS_APP": 9,
+    "RPC_SYS_RCAF": 10,
+    "RPC_SYS_RCN": 11,
+    "RPC_SYS_RCN_CLIENT": 12,
+    "RPC_SYS_BOOT": 13,
+    "RPC_SYS_ZIPTEST": 14,
+    "RPC_SYS_DEBUG": 15,
+    "RPC_SYS_PERIPHERALS": 16,
+    "RPC_SYS_NFC": 17,
+    "RPC_SYS_PB_NWK_MGR": 18,
+    "RPC_SYS_PB_GW": 19,
+    "RPC_SYS_PB_OTA_MGR": 20,
+    "RPC_SYS_BLE_SPNP": 21,
+    "RPC_SYS_BLE_HCI": 22,
+    "RPC_SYS_RESV01": 23,
+    "RPC_SYS_RESV02": 24,
+    "RPC_SYS_RESV03": 25,
+    "RPC_SYS_RESV04": 26,
+    "RPC_SYS_RESV05": 27,
+    "RPC_SYS_RESV06": 28,
+    "RPC_SYS_RESV07": 29,
+    "RPC_SYS_RESV08": 30,
+    "RPC_SYS_SRV_CTR": 31
+}
+
+```
