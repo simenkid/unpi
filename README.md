@@ -150,9 +150,9 @@ Send the binaries out through the physical transmitter if there is a `phy` trans
 
 **Arguments:**  
 
-1. `type` (_Number_ | _String_): The command type.  
-2. `subsys` (_Number_ | _String_): The subsystem.  
-3. `cmdId` (_Number_): The command id.  
+1. `type` (_Number_ | _String_): The command type. For exmaple, set `type` to `1` or `'SREQ'` to send a synchronous command.  
+2. `subsys` (_Number_ | _String_): The subsystem. For example, send a command of subsystem 'RPC_SYS_UTIL', you can set `subsys` to `7`, `'RPC_SYS_UTIL'`, or simply `'UTIL'` (the prefix `'RPC_SYS_'` can be ignored).  
+3. `cmdId` (_Number_): The command id which is a number according to which subsystem you are using.  
 4. `payload` (_Buffer_): The data payload.  
   
 **Returns:**  
@@ -162,7 +162,11 @@ Send the binaries out through the physical transmitter if there is a `phy` trans
 **Examples:**  
     
 ```js
+// The following calls do the same thing
 unpi.send('SREQ', 'UTIL', 6, new Buffer([ 1, 2, 3, 4, 5 ]));
+unpi.send('SREQ', 7, 6, new Buffer([ 1, 2, 3, 4, 5 ]));
+unpi.send(1, 'UTIL', 6, new Buffer([ 1, 2, 3, 4, 5 ]));
+unpi.send(1, 7, 6, new Buffer([ 1, 2, 3, 4, 5 ]));
 ```
 
 <a name="Events"></a>
