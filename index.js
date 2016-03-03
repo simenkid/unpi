@@ -120,7 +120,7 @@ Unpi.prototype.send = function (type, subsys, cmdId, payload, callback) {
 
     if (typeof subsys === 'string') {
         if (!subsys.startsWith('RPC_SYS_'))
-            subsys = subsys + 'RPC_SYS_';
+            subsys = 'RPC_SYS_' + subsys;
         subsys = subSys[subsys];
     }
 
@@ -140,20 +140,25 @@ Unpi.prototype.send = function (type, subsys, cmdId, payload, callback) {
         len = payload.length,
         cmd0 = ((type << 5) & 0xE0) | (subsys & 0x1F),
         cmd1 = cmdId,
-        lenBuf,
+        preBuf,
         fcs;
 
-    lenBuf = new Buffer(this.config.lenBytes);
+    preBuf = new Buffer(this.config.lenBytes + 2);
 
-    if (this.config.lenBytes === 1)
-        lenBuf.writeUInt8(payload.length, 0);
-    else if (this.config.lenBytes === 2)
-        lenBuf.writeUInt16LE(payload.length, 0);
+    if (this.config.lenBytes === 1) {
+        preBuf.writeUInt8(payload.length, 0);
+        preBuf.writeUInt8(cmd0, 1);
+        preBuf.writeUInt8(cmd1, 2);
+    } else if (this.config.lenBytes === 2) {
+        preBuf.writeUInt16LE(payload.length, 0);
+        preBuf.writeUInt8(cmd0, 2);
+        preBuf.writeUInt8(cmd1, 3);
+    }
 
-    fcs = checksum(lenBuf, payload);
-    packet = Concentrate().uint8(sof).buffer(lenBuf).uint8(cmd0).uint8(cmd1).buffer(payload).uint8(fcs).result();
+    fcs = checksum(preBuf, payload);
+    packet = Concentrate().uint8(sof).buffer(preBuf).buffer(payload).uint8(fcs).result();
     
-    if (this.config.phy) {
+    if (1 || this.config.phy) {
         this.concentrate.buffer(packet).flush();
         this.emit('flushed', { type: type , subsys: subsys, cmdId: cmdId });
     }
