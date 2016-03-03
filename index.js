@@ -1,4 +1,4 @@
-'use strict';
+// 'use strict';
 
 var util = require('util'),
     EventEmitter = require('events'),
@@ -11,10 +11,10 @@ var cmdType = {
     "SREQ": 1,
     "AREQ": 2,
     "SRSP": 3,
-    "RES01": 4,
-    "RES02": 5,
-    "RES03": 6,
-    "RES04": 7
+    "RES0": 4,
+    "RES1": 5,
+    "RES2": 6,
+    "RES3": 7
 };
 
 var subSys = {
@@ -102,6 +102,11 @@ function Unpi(config) {
         this.config.phy.pipe(this.parser);
         this.concentrate.pipe(this.config.phy);
     }
+
+    this.on('error', function (e) {
+        // [DEBUG]
+        // console.log(e);
+    });
 }
 
 util.inherits(Unpi, EventEmitter);
@@ -109,7 +114,7 @@ util.inherits(Unpi, EventEmitter);
 Unpi.DChunks = DChunks;
 Unpi.Concentrate = Concentrate;
 
-Unpi.prototype.send = function (type, subsys, cmdId, payload) {
+Unpi.prototype.send = function (type, subsys, cmdId, payload, callback) {
     if (typeof type === 'string')
         type = cmdType[type];
 
@@ -128,14 +133,12 @@ Unpi.prototype.send = function (type, subsys, cmdId, payload) {
     if (payload && !Buffer.isBuffer(payload))
         throw new TypeError('Payload should be a buffer.');
 
-    type = type & 0xE0;
-    subsys = type & 0x1F;
     payload = payload || new Buffer(0);
 
     var packet,
         sof = 0xFE,
         len = payload.length,
-        cmd0 = type | subsys,
+        cmd0 = ((type << 5) & 0xE0) | (subsys & 0x1F),
         cmd1 = cmdId,
         lenBuf,
         fcs;
@@ -150,8 +153,10 @@ Unpi.prototype.send = function (type, subsys, cmdId, payload) {
     fcs = checksum(lenBuf, payload);
     packet = Concentrate().uint8(sof).buffer(lenBuf).uint8(cmd0).uint8(cmd1).buffer(payload).uint8(fcs).result();
     
-    if (this.config.phy)
+    if (this.config.phy) {
         this.concentrate.buffer(packet).flush();
+        this.emit('flushed', { type: type , subsys: subsys, cmdId: cmdId });
+    }
 
     return packet;
 };
@@ -184,7 +189,7 @@ ru.clause('_unpiLength', function (name, bytes) {
 
 ru.clause('_unpiCmd0', function (type, subsys) {
     this.uint8('cmd0').tap(function () {
-        this.vars[type] = this.vars.cmd0 & 0xE0;
+        this.vars[type] = (this.vars.cmd0 & 0xE0) >> 5;
         this.vars[subsys] = this.vars.cmd0 & 0x1F;
         delete this.vars.cmd0;
     });

@@ -7,7 +7,7 @@ unpi
 2. [Installation](#Installation)  
 3. [Usage](#Usage)  
 4. [APIs](#APIs): new Unpi(), receive(), and send()   
-5. [Events](#Events): 'data' and 'error'  
+5. [Events](#Events): 'data', 'flushed' and 'error'  
 6. [Appendix](#Appendix): Command types and Subsystems  
 
 <a name="Intro"></a>
@@ -64,7 +64,18 @@ unpi.on('data', function (data) {
 ## Unpi Class
 Exposed by `require('unpi')`  
   
-<a name="API_MqttShepherd"></a>
+Unpi class also exports its dependencies [DChunks](https://www.npmjs.com/package/dissolve-chunks) and [Concentrate](https://www.npmjs.com/package/concentrate) for your convenient.  
+
+**Examples:**  
+```js
+var Unpi = require('unpi');
+var DChunks = Unpi.DChunks;
+var Concentrate = Unpi.Concentrate;
+
+var myBuffer = Concentrate().uint8(1).uint8(20).uint16(100).result();
+```
+
+<a name="API_Unpi"></a>
 ### new Unpi([config])
 Create a new instance of the `Unpi` class.  
   
@@ -145,8 +156,8 @@ unpi.receive(new Buffer([
 
 *************************************************
 <a name="API_send"></a>
-### .send(type, subsys, cmdId, payload)
-Send the binaries out through the physical transmitter if there is a `phy` transceiver. The API will return a raw buffer of the packet, you can take it as a generic packet builder.  
+### .send(type, subsys, cmdId, payload, callback)
+Send the binaries out through the physical transmitter if there is a `phy` transceiver. The API will return a raw buffer of the packet, you can take it as a generic packet builder. If the `phy` exists, unpi will fire an `'flushed'` event after each command packet flushed to `phy` transceiver.  
 
 **Arguments:**  
 
@@ -157,7 +168,7 @@ Send the binaries out through the physical transmitter if there is a `phy` trans
   
 **Returns:**  
   
-* (_Buffer_): Raw buffer of the built packet.
+* (_Buffer_): Buffer of the built command packet.  
 
 **Examples:**  
     
@@ -173,6 +184,7 @@ unpi.send(1, 7, 6, new Buffer([ 1, 2, 3, 4, 5 ]));
 ## 5. Events
 
 * [data](#EVT_data)
+* [flushed](#EVT_flushed)
 * [error](#EVT_error)
 
 *************************************************
@@ -200,7 +212,24 @@ unpi.on('data', function (data) {
     console.log(data);  // The parsed data
 });
 ```
+
 <br />  
+
+*************************************************
+<a name="EVT_flushed"></a>
+### unpi.on('flushed', function (cmdInfo) { ... })
+After each command packet is sending out to `phy` transceiver, a 'flushed' event will be fired along with the data of command information. The `cmdInfo` object has three properties of `type`, `subsys`, and `cmdId` to indicate which command was send.  
+
+**Examples:**  
+    
+```js
+unpi.on('flushed', function (cmdInfo) {
+    console.log(cmdInfo);  // { type: 1 , subsys: 2, cmdId: 10 }
+});
+```
+
+<br />  
+
 *************************************************
 <a name="EVT_error"></a>
 ### unpi.on('error', function (err) { ... })
@@ -226,10 +255,10 @@ unpi.on('error', function (err, parsedData) {
     "SREQ": 1,
     "AREQ": 2,
     "SRSP": 3,
-    "RES01": 4,
-    "RES02": 5,
-    "RES03": 6,
-    "RES04": 7
+    "RES0": 4,
+    "RES1": 5,
+    "RES2": 6,
+    "RES3": 7
 }
 ```
 * Subsystem  
