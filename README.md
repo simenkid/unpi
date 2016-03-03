@@ -83,10 +83,10 @@ Create a new instance of the `Unpi` class.
 
 1. `config` (_Object_, optional): Configuration of the unpi instance. Accepted properties of `config` are listed in the following table.  
 
-| Property     | Type    | Description                                                 |
-|--------------|---------|-------------------------------------------------------------|
-| lenBytes     | Number  | 1 or 2 to indicate the width of length field. Default is 2. |
-| phy          | Stream  | The transceiver instance, i.e. serial port, spi.            |
+| Property     | Type    | Description                                                                    |
+|--------------|---------|--------------------------------------------------------------------------------|
+| lenBytes     | Number  | 1 or 2 to indicate the width of length field. Default is 2.                    |
+| phy          | Stream  | The transceiver instance, i.e. serial port, spi. It should be a duplex stream. |
     
 **Returns:**  
   
@@ -113,7 +113,7 @@ unpi.receive(new Buffer([
 ]));
 ```
 
-* Create with a serialport transceiver. The unpi will internally pipe from and to it.
+* Create an unpi instance with a serialport transceiver. The unpi will internally pipe from and to it.
 
 ```js
 var SerialPort = require("serialport").SerialPort
@@ -156,8 +156,8 @@ unpi.receive(new Buffer([
 
 *************************************************
 <a name="API_send"></a>
-### .send(type, subsys, cmdId, payload, callback)
-Send the binaries out through the physical transmitter if there is a `phy` transceiver. The API will return a raw buffer of the packet, you can take it as a generic packet builder. If the `phy` exists, unpi will fire an `'flushed'` event after each command packet flushed to `phy` transceiver.  
+### .send(type, subsys, cmdId, payload)
+Send the binaries out through the physical transmitter if there is a `phy` transceiver. The API will return a raw buffer of the packet, you can take it as a generic packet builder. If the `phy` exists, unpi will fire an `'flushed'` event after each command packet flushed to the `phy` transceiver.  
 
 **Arguments:**  
 
@@ -195,13 +195,13 @@ The 'data' event will be fired along with the parsed result. Here is an example 
 ```js
 { 
     sof: 254,
-    len: 5,
-    type: 0,
-    subsys: 0,
-    cmd: 101,
-    payload: <Buffer 6c 6c 6f 1e 06>,
-    fcs: 119,   // this is the checksum originated from the sender
-    csum: 23    // this is the checksum calculated from the received binaries
+    len: 6,
+    type: 3,
+    subsys: 13,
+    cmd: 97,
+    payload: <Buffer 6b 65 73 20 03 6d>,
+    fcs: 121,   // this is the checksum originated from the sender
+    csum: 91    // this is the checksum calculated from the received binaries
 }
 ```
 
