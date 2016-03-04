@@ -108,8 +108,7 @@ unpi.on('data', function (data) {
 
 // You can use .receive(buffer) to test it
 unpi.receive(new Buffer([
-    0xFE, 0x05, 0x00, 0x65, 0x6c,
-    0x6c, 0x6f, 0x1e, 0x06, 0x77
+    0xFE, 0x01, 0x41, 0x00, 0x00, 0x40
 ]));
 ```
 
@@ -149,8 +148,7 @@ Feeds the unpi with some binary raw data. You can take the unpi as a generic par
     
 ```js
 unpi.receive(new Buffer([
-    0xFE, 0x05, 0x00, 0x65, 0x6c,
-    0x6c, 0x6f, 0x1e, 0x06, 0x77
+    0xFE, 0x01, 0x41, 0x00, 0x00, 0x40
 ]));
 ```
 
@@ -174,10 +172,10 @@ Send the binaries out through the physical transmitter if there is a `phy` trans
     
 ```js
 // The following calls do the same thing
-unpi.send('SREQ', 'UTIL', 6, new Buffer([ 1, 2, 3, 4, 5 ]));
-unpi.send('SREQ', 7, 6, new Buffer([ 1, 2, 3, 4, 5 ]));
-unpi.send(1, 'UTIL', 6, new Buffer([ 1, 2, 3, 4, 5 ]));
-unpi.send(1, 7, 6, new Buffer([ 1, 2, 3, 4, 5 ]));
+unpi.send('AREQ', 'SYS', 0, new Buffer([ 0 ]));
+unpi.send('AREQ', 1, 0, new Buffer([ 0 ]));
+unpi.send(2, 'SYS', 0, new Buffer([ 0 ]));
+unpi.send(2, 1, 0, new Buffer([ 0 ]));
 ```
 
 <a name="Events"></a>
@@ -196,12 +194,12 @@ The 'data' event will be fired along with the parsed result. Here is an example 
 { 
     sof: 254,
     len: 6,
-    type: 3,
-    subsys: 13,
-    cmd: 97,
-    payload: <Buffer 6b 65 73 20 03 6d>,
-    fcs: 121,   // this is the checksum originated from the sender
-    csum: 91    // this is the checksum calculated from the received binaries
+    type: 2,
+    subsys: 1,
+    cmd: 128,
+    payload: <Buffer 02 02 00 02 06 02>,
+    fcs: 193,   // this is the checksum originated from the sender
+    csum: 193   // this is the checksum calculated from the received binaries
 }
 ```
 
