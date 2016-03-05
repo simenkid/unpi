@@ -78,7 +78,7 @@ function Unpi(config) {
     this.parser = DChunks().join(pRules).compile();
 
     this.parser.on('parsed', function (result) {
-        var cmd0 = result.type << 5 | result.subsys,
+        var cmd0 = (result.type << 5) | result.subsys,
             preBufLen = self.config.lenBytes + 2,
             preBuf = new Buffer(preBufLen);
 
