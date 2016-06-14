@@ -1,15 +1,18 @@
 {
   "name": "unpi",
-  "version": "0.9.4",
+  "version": "0.9.5",
   "description": "Unified Network Processor Interface",
   "main": "index.js",
   "dependencies": {
     "concentrate": "^0.2.3",
     "dissolve-chunks": "^1.0.1"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "mocha": "^2.5.3"
+  },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "make test-all"
   },
   "repository": {
     "type": "git",

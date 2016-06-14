@@ -60,6 +60,9 @@ function Unpi(config) {
     var pRules,
         self = this;
 
+    if (config !== undefined && (typeof config !== 'object' || Array.isArray(config)))
+        throw new TypeError('config should be an object if given.');
+
     EventEmitter.call(this);
 
     this.config = config || {};
@@ -115,24 +118,35 @@ Unpi.DChunks = DChunks;
 Unpi.Concentrate = Concentrate;
 
 Unpi.prototype.send = function (type, subsys, cmdId, payload, callback) {
-    if (typeof type === 'string')
-        type = cmdType[type];
+    if (typeof type !== 'string' && typeof type !== 'number') 
+        throw new TypeError('Argument type should be a string or a number.');
+    else if (typeof type === 'number' && isNaN(type))
+        throw new TypeError('Argument type should be a string or a number.');
 
-    if (typeof subsys === 'string') {
-        if (!subsys.startsWith('RPC_SYS_'))
-            subsys = 'RPC_SYS_' + subsys;
-        subsys = subSys[subsys];
-    }
+    if (typeof subsys !== 'string' && typeof subsys !== 'number')
+        throw new TypeError('Argument subsys should be a string or a number.');
+    else if (typeof subsys === 'number' && isNaN(subsys))
+        throw new TypeError('Argument subsys should be a string or a number.');
 
-    if (type === undefined || subsys === undefined)
-        throw new TypeError('Invalid command type or subsystem.');
-
-    if (typeof cmdId !== 'number')
+    if (typeof cmdId !== 'number' || isNaN(cmdId))
         throw new TypeError('Command id should be a number.');
 
-    if (payload && !Buffer.isBuffer(payload))
+    if (typeof payload === 'function') {
+        callback = payload;
+        payload = undefined;
+    }
+
+    if (payload !== undefined && !Buffer.isBuffer(payload))
         throw new TypeError('Payload should be a buffer.');
 
+    type = getCmdTypeString(type);
+    subsys = getSubsysString(subsys);
+
+    if (type === undefined || subsys === undefined)
+        throw new Error('Invalid command type or subsystem.');
+
+    type = cmdType[type];
+    subsys = subSys[subsys];
     payload = payload || new Buffer(0);
 
     var packet,
@@ -223,6 +237,44 @@ function checksum(buf1, buf2) {
     }
 
     return fcs;
+}
+
+function getCmdTypeString(cmdtype) {
+    var cmdTypeString;
+
+    if (typeof cmdtype === 'number') {
+        for (var k in cmdType) {
+            if (cmdType.hasOwnProperty(k) && cmdType[k] === cmdtype) {
+                cmdTypeString = k;
+                break;
+            }
+        }
+    } else if (typeof cmdtype === 'string') {
+        if (cmdType.hasOwnProperty(cmdtype))
+            cmdTypeString = cmdtype;
+    }
+    return cmdTypeString;
+}
+
+function getSubsysString(subsys) {
+    var subsysString;
+
+    if (typeof subsys === 'number') {
+        for (var k in subSys) {
+            if (subSys.hasOwnProperty(k) && subSys[k] === subsys) {
+                cmdString = k;
+                break;
+            }
+        }
+    } else if (typeof subsys === 'string') {
+        if (!subsys.startsWith('RPC_SYS_'))
+            subsys = 'RPC_SYS_' + subsys;
+
+        if (subSys.hasOwnProperty(subsys))
+            subsysString = subsys;
+    }
+
+    return subsysString;
 }
 
 module.exports = Unpi;
