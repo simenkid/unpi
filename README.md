@@ -2,7 +2,7 @@ unpi
 ========================
 Unified Network Processor Interface for Texas Instruments Wireless SoCs.  
 
-[![NPM](https://nodei.co/npm/unpi.png?downloads=true)](https://nodei.co/npm/busyman/)  
+[![NPM](https://nodei.co/npm/unpi.png?downloads=true)](https://nodei.co/npm/unpi/)  
 
 [![Travis branch](https://img.shields.io/travis/simenkid/unpi/master.svg?maxAge=2592000)](https://travis-ci.org/simenkid/unpi)
 [![npm](https://img.shields.io/npm/v/unpi.svg?maxAge=2592000)](https://www.npmjs.com/package/unpi)
