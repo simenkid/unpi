@@ -117,24 +117,19 @@ util.inherits(Unpi, EventEmitter);
 Unpi.DChunks = DChunks;
 Unpi.Concentrate = Concentrate;
 
-Unpi.prototype.send = function (type, subsys, cmdId, payload, callback) {
+Unpi.prototype.send = function (type, subsys, cmdId, payload) {
     if (typeof type !== 'string' && typeof type !== 'number') 
         throw new TypeError('Argument type should be a string or a number.');
     else if (typeof type === 'number' && isNaN(type))
-        throw new TypeError('Argument type should be a string or a number.');
+        throw new TypeError('Argument type cannot be NaN.');
 
     if (typeof subsys !== 'string' && typeof subsys !== 'number')
         throw new TypeError('Argument subsys should be a string or a number.');
     else if (typeof subsys === 'number' && isNaN(subsys))
-        throw new TypeError('Argument subsys should be a string or a number.');
+        throw new TypeError('Argument subsys cannot be NaN.');
 
     if (typeof cmdId !== 'number' || isNaN(cmdId))
         throw new TypeError('Command id should be a number.');
-
-    if (typeof payload === 'function') {
-        callback = payload;
-        payload = undefined;
-    }
 
     if (payload !== undefined && !Buffer.isBuffer(payload))
         throw new TypeError('Payload should be a buffer.');
@@ -172,15 +167,19 @@ Unpi.prototype.send = function (type, subsys, cmdId, payload, callback) {
     fcs = checksum(preBuf, payload);
     packet = Concentrate().uint8(sof).buffer(preBuf).buffer(payload).uint8(fcs).result();
     
-    if (1 || this.config.phy) {
-        this.concentrate.buffer(packet).flush();
-        this.emit('flushed', { type: type , subsys: subsys, cmdId: cmdId });
-    }
+    this.concentrate.buffer(packet).flush();
+    this.emit('flushed', { type: type , subsys: subsys, cmdId: cmdId });
 
     return packet;
 };
 
 Unpi.prototype.receive = function (buf) {
+    if (buf === undefined || buf === null)
+        buf = new Buffer(0);
+
+    if (!Buffer.isBuffer(buf))
+        throw new TypeError('buf should be a Buffer.');
+
     this.parser.write(buf);
     return this;
 };

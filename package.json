@@ -1,11 +1,11 @@
 {
   "name": "unpi",
-  "version": "0.9.5",
+  "version": "0.9.6",
   "description": "Unified Network Processor Interface",
   "main": "index.js",
   "dependencies": {
     "concentrate": "^0.2.3",
-    "dissolve-chunks": "^1.0.1"
+    "dissolve-chunks": "^1.0.2"
   },
   "devDependencies": {
     "chai": "^3.5.0",
