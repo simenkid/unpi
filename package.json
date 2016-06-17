@@ -1,6 +1,6 @@
 {
   "name": "unpi",
-  "version": "0.9.6",
+  "version": "0.9.7",
   "description": "Unified Network Processor Interface",
   "main": "index.js",
   "dependencies": {
@@ -23,6 +23,12 @@
     "unpi"
   ],
   "author": "Simen Li",
+  "contributors": [
+    {
+      "name": "Jack Wu",
+      "email": "jackchased@gmail.com"
+    }
+  ],
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/simenkid/unpi/issues"
