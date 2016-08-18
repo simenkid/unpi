@@ -1,11 +1,11 @@
 {
   "name": "unpi",
-  "version": "0.9.8",
-  "description": "Unified Network Processor Interface",
+  "version": "0.1.0",
+  "description": "Unified Network Processor Interface for Texas Instruments Wireless SoCs.",
   "main": "index.js",
   "dependencies": {
     "concentrate": "^0.2.3",
-    "dissolve-chunks": "^1.0.8"
+    "dissolve-chunks": "^1.2.0"
   },
   "devDependencies": {
     "chai": "^3.5.0",
@@ -20,7 +20,11 @@
   },
   "keywords": [
     "npi",
-    "unpi"
+    "unpi",
+    "ti",
+    "cc253x",
+    "cc254x",
+    "cc26xx"
   ],
   "author": "Simen Li",
   "contributors": [

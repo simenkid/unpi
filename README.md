@@ -10,15 +10,15 @@ Unified Network Processor Interface for Texas Instruments Wireless SoCs.
 
 ## Table of Contents
 
-1. [Intro](#Intro)  
+1. [Overview](#Overview)  
 2. [Installation](#Installation)  
 3. [Usage](#Usage)  
 4. [APIs](#APIs): new Unpi(), receive(), and send()   
 5. [Events](#Events): 'data', 'flushed' and 'error'  
 6. [Appendix](#Appendix): Command types and Subsystems  
 
-<a name="Intro"></a>
-## 1. Intro
+<a name="Overview"></a>
+## 1. Overview
 
 The *unpi* is the packet builder and parser for Texas Instruments [_Unified Network Processor Interface (UNPI)_](http://processors.wiki.ti.com/index.php/Unified_Network_Processor_Interface) used in RF4CE, BluetoothSmart, and ZigBee wireless SoCs. As stated in TI's wiki page:  
 
