@@ -20,10 +20,6 @@ The *unpi* is the packet builder and parser for Texas Instruments [_Unified Netw
 
 > TI's Unified Network Processor Interface (NPI) is used for establishing a serial data link between a TI SoC and external MCUs or PCs. This is mainly used by TI's network processor solutions.  
 
-The UNPI packet consists of _sof_, _length_, _cmd0_, _cmd1_, _payload_, and _fcs_ fields. The description of each field can be found in [_Unified Network Processor Interface_](http://processors.wiki.ti.com/index.php/Unified_Network_Processor_Interface).  
-
-It is noted that **UNPI** defines the _length_ field with 2 bytes wide, but some SoCs use [NPI](http://processors.wiki.ti.com/index.php/NPI) in their real transmission (physical layer), the _length_ field just occupies a single byte. (The _length_ field will be normalized to 2 bytes in the transportation layer of NPI stack.)  
-
 
 ## Installation  
 
