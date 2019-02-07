@@ -1,6 +1,6 @@
 {
   "name": "unpi",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Unified Network Processor Interface for Texas Instruments Wireless SoCs.",
   "main": "index.js",
   "dependencies": {
