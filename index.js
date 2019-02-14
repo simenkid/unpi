@@ -269,7 +269,7 @@ function getSubsysString(subsys) {
     if (typeof subsys === 'number') {
         for (var k in subSys) {
             if (subSys.hasOwnProperty(k) && subSys[k] === subsys) {
-                cmdString = k;
+                subsysString = k;
                 break;
             }
         }
